@@ -31,7 +31,7 @@ the QR with any phone and instantly sees all emergency information.
 ## 🚀 How to Run
 
 ### 1. Clone the repo
-git clone https://github.com/YOUR_USERNAME/mediscan-emergency-qr.git
+git clone https://github.com/vivek41-glitch/mediscan-emergency-qr.git
 cd mediscan-emergency-qr
 
 ### 2. Install dependencies
