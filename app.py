@@ -41,6 +41,20 @@ elif nav == "scanner":
 elif nav == "home":
     st.session_state["_page"] = "🏠  Home"
 
+m1, m2, m3 = st.columns(3)
+with m1:
+    if st.button("🏠 Home", use_container_width=True):
+        st.session_state["_page"] = "🏠  Home"
+        st.rerun()
+with m2:
+    if st.button("📋 Register", use_container_width=True):
+        st.session_state["_page"] = "📋  Register"
+        st.rerun()
+with m3:
+    if st.button("📷 Scanner", use_container_width=True):
+        st.session_state["_page"] = "📷  Scanner"
+        st.rerun()
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
