@@ -304,6 +304,10 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
     padding: 3px 10px; border-radius: 6px;
     border: 1px solid #A7E8D4; display: inline-block; margin-top: 4px; letter-spacing: 1px;
 }
+            input[type="text"], input[type="number"], input[type="tel"], textarea {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
