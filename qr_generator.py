@@ -1,20 +1,9 @@
 import qrcode
 import io
-import socket
 
-def get_local_ip():
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-        s.close()
-        return ip
-    except:
-        return "localhost"
-
-def generate_qr(user_id: str, port: int = 8509) -> bytes:
-    local_ip = get_local_ip()
-    url = f"http://{local_ip}:{port}/?scan={user_id}"
+def generate_qr(user_id: str, port: int = 8501) -> bytes:
+    # Use the deployed Streamlit Cloud URL instead of local IP
+    url = f"https://mediscan-emergency-qr-vswhbctby3xj78mcijchre.streamlit.app/?scan={user_id}"
 
     qr = qrcode.QRCode(
         version=1,
