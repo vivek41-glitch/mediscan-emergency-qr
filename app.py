@@ -71,24 +71,37 @@ html, body, [class*="css"] {
 }
 
 .stTextInput input, .stTextArea textarea {
-    background: var(--surface) !important;
+    background: #FFFFFF !important;
     border: 1.5px solid var(--border2) !important;
     border-radius: 10px !important;
-    color: var(--text1) !important;
+    color: #0F1C3F !important;
+    caret-color: #0F1C3F !important;
     font-family: 'Plus Jakarta Sans', sans-serif !important;
     font-size: 0.92em !important;
     padding: 11px 15px !important;
     transition: all 0.2s !important;
     box-shadow: var(--shadow) !important;
+    -webkit-text-fill-color: #0F1C3F !important;
 }
 .stTextInput input:focus, .stTextArea textarea:focus {
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 4px rgba(0,102,255,0.1) !important;
+    color: #0F1C3F !important;
+    -webkit-text-fill-color: #0F1C3F !important;
+}
+.stTextInput input::placeholder, .stTextArea textarea::placeholder {
+    color: #8896B3 !important;
+    -webkit-text-fill-color: #8896B3 !important;
+    opacity: 1 !important;
 }
 div[data-baseweb="select"] > div {
-    background: var(--surface) !important;
+    background: #FFFFFF !important;
     border: 1.5px solid var(--border2) !important;
     border-radius: 10px !important;
+    color: #0F1C3F !important;
+}
+div[data-baseweb="select"] * {
+    color: #0F1C3F !important;
 }
 label {
     color: var(--text2) !important;
@@ -149,7 +162,6 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
     font-weight: 600 !important;
 }
 
-/* Page header */
 .page-badge {
     display: inline-flex;
     align-items: center;
@@ -175,7 +187,6 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
 }
 .page-sub { font-size: 0.9em; color: var(--text3); }
 
-/* Stats */
 .stats-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -211,7 +222,6 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
 .stat-value { font-size: 1.6em; font-weight: 800; color: var(--text1); letter-spacing: -0.5px; line-height: 1; }
 .stat-label { font-size: 0.78em; color: var(--text3); margin-top: 5px; font-weight: 500; }
 
-/* Steps */
 .how-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); margin: 2rem 0 1rem; }
 .step-row {
     display: flex; gap: 14px;
@@ -234,7 +244,6 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
 .step-t { font-weight: 700; font-size: 0.92em; color: var(--text1); margin-bottom: 2px; }
 .step-d { font-size: 0.8em; color: var(--text3); line-height: 1.5; }
 
-/* Net card */
 .net-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -253,7 +262,6 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
     50% { box-shadow: 0 0 14px var(--success); }
 }
 
-/* Form */
 .section-label {
     font-size: 0.72em; font-weight: 700;
     text-transform: uppercase; letter-spacing: 1.5px;
@@ -262,7 +270,6 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
     border-bottom: 2px solid var(--primary-light);
 }
 
-/* Sidebar brand */
 .sidebar-brand { padding: 24px 20px 18px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
 .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
 .logo-icon {
@@ -274,14 +281,12 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
 .logo-name { font-size: 1.2em; font-weight: 800; color: var(--text1) !important; letter-spacing: -0.3px; }
 .logo-tag { font-size: 0.72em; color: var(--text3) !important; margin-left: 46px; }
 
-/* profile table */
 .p-table { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
 .p-row { display: flex; align-items: center; padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 0.85em; }
 .p-row:last-child { border-bottom: none; }
 .p-key { width: 40%; color: var(--text3); font-weight: 500; }
 .p-val { color: var(--text1); font-weight: 600; }
 
-/* reg success */
 .reg-box {
     background: var(--success-light); border: 1px solid #A7E8D4;
     border-left: 4px solid var(--success); border-radius: 14px;
@@ -428,8 +433,6 @@ elif page == "📋  Register":
         elif not emergency_contact.strip():
             st.error("⚠ Emergency contact number is required.")
         else:
-            port = 8501  # ← Change to your terminal port
-
             with st.spinner("Creating profile..."):
                 user_id = insert_user(
                     name=name.strip(),
@@ -438,7 +441,7 @@ elif page == "📋  Register":
                     conditions=conditions.strip() if conditions.strip() else "None",
                     emergency_contact=emergency_contact.strip()
                 )
-                qr_bytes = generate_qr(user_id, port=port)
+                qr_bytes = generate_qr(user_id)
                 time.sleep(0.3)
 
             st.markdown(f"""
@@ -545,22 +548,15 @@ elif page == "📷  Scanner":
                 cap.release()
                 frame_box.empty()
 
-    # ══ EMERGENCY CARD — pure Streamlit, no HTML ════════════
     if st.session_state["found_user"]:
         u = st.session_state["found_user"]
 
         st.markdown("---")
-
-        # Top alert bar
         st.error(f"🆘  EMERGENCY MEDICAL PROFILE  ·  {u['id']}")
-
-        # Name
         st.markdown(f"# 👤 {u['name']}")
         st.caption(f"MediScan ID: {u['id']}")
-
         st.markdown("---")
 
-        # Blood group — big
         st.markdown("### 🩸 Blood Group")
         st.markdown(
             f"<div style='display:inline-block; background:#FFF0F1; border:2px solid #E63946;"
@@ -572,7 +568,6 @@ elif page == "📷  Scanner":
 
         st.markdown("---")
 
-        # Allergies and Conditions side by side
         c1, c2 = st.columns(2)
         with c1:
             st.markdown("**⚠️ Allergies**")
@@ -583,7 +578,6 @@ elif page == "📷  Scanner":
 
         st.markdown("---")
 
-        # Emergency contact
         st.markdown("### 📞 Emergency Contact")
         st.markdown(
             f"<div style='font-family:JetBrains Mono,monospace; font-size:1.8em; font-weight:700;"
@@ -591,7 +585,6 @@ elif page == "📷  Scanner":
             unsafe_allow_html=True
         )
 
-        # CALL NOW — simple anchor, always works on phone
         st.markdown(
             f"<a href='tel:{u['emergency_contact']}' style='"
             f"display:block; text-align:center; background:#0A9E6E; color:white;"
