@@ -32,6 +32,15 @@ if scanned_id:
         st.session_state["found_user"] = user
         st.session_state["from_qr"] = True
 
+# Handle mobile nav via query params
+nav = st.query_params.get("nav", None)
+if nav == "register":
+    st.session_state["_page"] = "📋  Register"
+elif nav == "scanner":
+    st.session_state["_page"] = "📷  Scanner"
+elif nav == "home":
+    st.session_state["_page"] = "🏠  Home"
+
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
@@ -91,7 +100,6 @@ html, body, [class*="css"] {
 }
 .stTextInput input::placeholder, .stTextArea textarea::placeholder {
     color: #8896B3 !important;
-    -webkit-text-fill-color: #8896B3 !important;
     opacity: 1 !important;
 }
 div[data-baseweb="select"] > div {
@@ -100,13 +108,11 @@ div[data-baseweb="select"] > div {
     border-radius: 10px !important;
     color: #0F1C3F !important;
 }
-div[data-baseweb="select"] * {
-    color: #0F1C3F !important;
-}
-label {
-    color: var(--text2) !important;
-    font-size: 0.8em !important;
-    font-weight: 600 !important;
+div[data-baseweb="select"] * { color: #0F1C3F !important; }
+label { color: var(--text2) !important; font-size: 0.8em !important; font-weight: 600 !important; }
+input[type="text"], input[type="number"], input[type="tel"], textarea {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
 }
 
 .stButton > button {
@@ -115,169 +121,48 @@ label {
     border-radius: 10px !important;
     color: var(--text2) !important;
     font-family: 'Plus Jakarta Sans', sans-serif !important;
-    font-weight: 600 !important;
-    font-size: 0.88em !important;
-    padding: 10px 20px !important;
-    transition: all 0.2s !important;
-    width: 100% !important;
-    box-shadow: var(--shadow) !important;
+    font-weight: 600 !important; font-size: 0.88em !important;
+    padding: 10px 20px !important; transition: all 0.2s !important;
+    width: 100% !important; box-shadow: var(--shadow) !important;
 }
-.stButton > button:hover {
-    border-color: var(--primary) !important;
-    color: var(--primary) !important;
-    background: var(--primary-light) !important;
-}
-.stButton > button[kind="primary"] {
-    background: var(--primary) !important;
-    border: none !important;
-    color: white !important;
-    box-shadow: 0 4px 16px rgba(0,102,255,0.3) !important;
-}
-.stButton > button[kind="primary"]:hover {
-    background: var(--primary-dark) !important;
-    box-shadow: 0 8px 28px rgba(0,102,255,0.4) !important;
-    transform: translateY(-2px) !important;
-}
-.stDownloadButton > button {
-    background: var(--success) !important;
-    border: none !important;
-    color: white !important;
-    font-weight: 600 !important;
-    width: 100% !important;
-    border-radius: 10px !important;
-    box-shadow: 0 4px 16px rgba(10,158,110,0.3) !important;
-}
+.stButton > button:hover { border-color: var(--primary) !important; color: var(--primary) !important; background: var(--primary-light) !important; }
+.stButton > button[kind="primary"] { background: var(--primary) !important; border: none !important; color: white !important; box-shadow: 0 4px 16px rgba(0,102,255,0.3) !important; }
+.stButton > button[kind="primary"]:hover { background: var(--primary-dark) !important; box-shadow: 0 8px 28px rgba(0,102,255,0.4) !important; transform: translateY(-2px) !important; }
+.stDownloadButton > button { background: var(--success) !important; border: none !important; color: white !important; font-weight: 600 !important; width: 100% !important; border-radius: 10px !important; box-shadow: 0 4px 16px rgba(10,158,110,0.3) !important; }
 
 .stSuccess > div { background: var(--success-light) !important; border-radius: 10px !important; }
 .stError > div { background: var(--danger-light) !important; border-radius: 10px !important; }
 .stInfo > div { background: var(--primary-light) !important; border-radius: 10px !important; }
-
 hr { border: none !important; border-top: 1px solid var(--border) !important; margin: 2rem 0 !important; }
+.streamlit-expanderHeader { background: var(--surface) !important; border: 1.5px solid var(--border2) !important; border-radius: 10px !important; font-size: 0.88em !important; font-weight: 600 !important; }
 
-.streamlit-expanderHeader {
-    background: var(--surface) !important;
-    border: 1.5px solid var(--border2) !important;
-    border-radius: 10px !important;
-    font-size: 0.88em !important;
-    font-weight: 600 !important;
-}
-
-.page-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: var(--primary-light);
-    color: var(--primary);
-    font-size: 0.72em;
-    font-weight: 700;
-    padding: 5px 12px;
-    border-radius: 20px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-.page-title {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    font-size: 2em;
-    font-weight: 800;
-    color: var(--text1);
-    letter-spacing: -0.8px;
-    line-height: 1.15;
-    margin-bottom: 8px;
-}
+.page-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--primary-light); color: var(--primary); font-size: 0.72em; font-weight: 700; padding: 5px 12px; border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 12px; }
+.page-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 2em; font-weight: 800; color: var(--text1); letter-spacing: -0.8px; line-height: 1.15; margin-bottom: 8px; }
 .page-sub { font-size: 0.9em; color: var(--text3); }
 
-.stats-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin: 2rem 0;
-}
-.stat-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 22px 20px;
-    box-shadow: var(--shadow);
-    transition: all 0.2s;
-    position: relative;
-    overflow: hidden;
-}
-.stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--primary);
-    border-radius: 16px 16px 0 0;
-}
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 2rem 0; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 22px 20px; box-shadow: var(--shadow); transition: all 0.2s; position: relative; overflow: hidden; }
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--primary); border-radius: 16px 16px 0 0; }
 .stat-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
-.stat-icon-wrap {
-    width: 44px; height: 44px;
-    background: var(--primary-light);
-    border-radius: 12px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.2em; margin-bottom: 14px;
-}
+.stat-icon-wrap { width: 44px; height: 44px; background: var(--primary-light); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2em; margin-bottom: 14px; }
 .stat-value { font-size: 1.6em; font-weight: 800; color: var(--text1); letter-spacing: -0.5px; line-height: 1; }
 .stat-label { font-size: 0.78em; color: var(--text3); margin-top: 5px; font-weight: 500; }
 
 .how-title { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text3); margin: 2rem 0 1rem; }
-.step-row {
-    display: flex; gap: 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 16px 18px; margin: 8px 0;
-    align-items: center;
-    box-shadow: var(--shadow);
-    transition: all 0.2s;
-}
+.step-row { display: flex; gap: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; margin: 8px 0; align-items: center; box-shadow: var(--shadow); transition: all 0.2s; }
 .step-row:hover { border-color: var(--primary); box-shadow: var(--shadow-lg); transform: translateX(4px); }
-.step-bubble {
-    min-width: 34px; height: 34px;
-    background: var(--primary); color: white;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 0.85em; flex-shrink: 0;
-}
+.step-bubble { min-width: 34px; height: 34px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85em; flex-shrink: 0; }
 .step-t { font-weight: 700; font-size: 0.92em; color: var(--text1); margin-bottom: 2px; }
 .step-d { font-size: 0.8em; color: var(--text3); line-height: 1.5; }
 
-.net-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px 18px;
-    display: inline-flex; align-items: center; gap: 12px;
-    box-shadow: var(--shadow);
-}
-.net-dot {
-    width: 10px; height: 10px;
-    background: var(--success); border-radius: 50%; flex-shrink: 0;
-    animation: pulse-dot 2s infinite;
-}
-@keyframes pulse-dot {
-    0%, 100% { box-shadow: 0 0 4px var(--success); }
-    50% { box-shadow: 0 0 14px var(--success); }
-}
+.net-card { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 14px 18px; display: inline-flex; align-items: center; gap: 12px; box-shadow: var(--shadow); }
+.net-dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; flex-shrink: 0; animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%, 100% { box-shadow: 0 0 4px var(--success); } 50% { box-shadow: 0 0 14px var(--success); } }
 
-.section-label {
-    font-size: 0.72em; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1.5px;
-    color: var(--primary); margin: 20px 0 14px;
-    padding-bottom: 8px;
-    border-bottom: 2px solid var(--primary-light);
-}
-
+.section-label { font-size: 0.72em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--primary); margin: 20px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--primary-light); }
 .sidebar-brand { padding: 24px 20px 18px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
 .sidebar-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-.logo-icon {
-    width: 36px; height: 36px;
-    background: var(--primary); border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.1em;
-}
+.logo-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1em; }
 .logo-name { font-size: 1.2em; font-weight: 800; color: var(--text1) !important; letter-spacing: -0.3px; }
 .logo-tag { font-size: 0.72em; color: var(--text3) !important; margin-left: 46px; }
 
@@ -287,26 +172,42 @@ hr { border: none !important; border-top: 1px solid var(--border) !important; ma
 .p-key { width: 40%; color: var(--text3); font-weight: 500; }
 .p-val { color: var(--text1); font-weight: 600; }
 
-.reg-box {
-    background: var(--success-light); border: 1px solid #A7E8D4;
-    border-left: 4px solid var(--success); border-radius: 14px;
-    padding: 18px 22px; margin: 1.5rem 0;
-    display: flex; align-items: center; gap: 14px;
+.reg-box { background: var(--success-light); border: 1px solid #A7E8D4; border-left: 4px solid var(--success); border-radius: 14px; padding: 18px 22px; margin: 1.5rem 0; display: flex; align-items: center; gap: 14px; }
+.reg-box-icon { width: 40px; height: 40px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1em; flex-shrink: 0; }
+.reg-box-id { font-family: 'JetBrains Mono', monospace; font-size: 0.88em; color: var(--text2); background: white; padding: 3px 10px; border-radius: 6px; border: 1px solid #A7E8D4; display: inline-block; margin-top: 4px; letter-spacing: 1px; }
+
+/* ── MOBILE BOTTOM NAV ── */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #FFFFFF;
+    border-top: 1.5px solid #E2E8F5;
+    padding: 8px 0 24px;
+    z-index: 99999;
+    box-shadow: 0 -4px 20px rgba(0,30,100,0.1);
 }
-.reg-box-icon {
-    width: 40px; height: 40px; background: var(--success);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    color: white; font-size: 1.1em; flex-shrink: 0;
+.mobile-nav-inner {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
 }
-.reg-box-id {
-    font-family: 'JetBrains Mono', monospace; font-size: 0.88em;
-    color: var(--text2); background: white;
-    padding: 3px 10px; border-radius: 6px;
-    border: 1px solid #A7E8D4; display: inline-block; margin-top: 4px; letter-spacing: 1px;
+.mobile-nav-btn {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 3px;
+    padding: 8px 24px; border-radius: 12px;
+    cursor: pointer; text-decoration: none !important;
+    color: #4A5878 !important;
+    font-size: 0.7em; font-weight: 700;
+    -webkit-text-fill-color: #4A5878 !important;
+    transition: all 0.2s;
 }
-            input[type="text"], input[type="number"], input[type="tel"], textarea {
-    color: #000000 !important;
-    -webkit-text-fill-color: #000000 !important;
+.mobile-nav-btn:active { color: #0066FF !important; -webkit-text-fill-color: #0066FF !important; background: #EBF3FF; }
+.nav-icon { font-size: 1.6em; line-height: 1; }
+@media (max-width: 768px) {
+    .mobile-nav { display: block !important; }
+    .block-container { padding-bottom: 110px !important; }
+    [data-testid="stSidebar"] { display: none !important; }
 }
 </style>
 """, unsafe_allow_html=True)
@@ -325,6 +226,11 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     default_index = 2 if st.session_state.get("from_qr") else 0
+    if "_page" in st.session_state:
+        options = ["🏠  Home", "📋  Register", "📷  Scanner"]
+        if st.session_state["_page"] in options:
+            default_index = options.index(st.session_state["_page"])
+
     page = st.radio("", ["🏠  Home", "📋  Register", "📷  Scanner"], index=default_index, label_visibility="collapsed")
 
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
@@ -348,7 +254,7 @@ if page == "🏠  Home":
     <div>
         <div class="page-badge">🚑 Emergency System</div>
         <div class="page-title">Medical QR<br>Identification</div>
-        <div class="page-sub">Instant victim identification at accident scenes — no internet required</div>
+        <div class="page-sub">Works globally — instant access from anywhere</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -391,16 +297,6 @@ if page == "🏠  Home":
             </div>
         </div>
         """, unsafe_allow_html=True)
-
-    st.markdown(f"""
-    <div class="net-card" style="margin-top:2rem;">
-        <div class="net-dot"></div>
-        <div>
-            <div style="font-size:0.78em; color:var(--text3);">App running on your network</div>
-            <div style="font-family:monospace; color:var(--text1); font-size:0.88em; font-weight:500;">http://{ip}:PORT</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ══════════════════════════════════════════════════════════
 # PAGE 2 — REGISTER
@@ -606,3 +502,23 @@ elif page == "📷  Scanner":
             st.session_state["found_user"] = None
             st.session_state["scanning"] = False
             st.rerun()
+
+# ══ MOBILE BOTTOM NAV ══════════════════════════════════════
+st.markdown("""
+<div class="mobile-nav">
+    <div class="mobile-nav-inner">
+        <a class="mobile-nav-btn" href="?nav=home">
+            <span class="nav-icon">🏠</span>
+            <span>Home</span>
+        </a>
+        <a class="mobile-nav-btn" href="?nav=register">
+            <span class="nav-icon">📋</span>
+            <span>Register</span>
+        </a>
+        <a class="mobile-nav-btn" href="?nav=scanner">
+            <span class="nav-icon">📷</span>
+            <span>Scanner</span>
+        </a>
+    </div>
+</div>
+""", unsafe_allow_html=True)
