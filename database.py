@@ -25,3 +25,6 @@ def get_user(user_id):
     if result.data:
         return result.data[0]
     return None
+
+# alias for compatibility
+insert_user = register_user
