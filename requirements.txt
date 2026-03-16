@@ -2,4 +2,3 @@ streamlit
 qrcode[pil]
 Pillow
 opencv-python-headless
-supabase
